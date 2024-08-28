@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="homepage">
+    <h1>Link Inn Internets</h1>
+    <h2>Connecting Homes, Empowering Lives</h2>
+
+    <p>Welcome to Link Inn Internets! Your trusted partner for reliable and affordable internet services in Homabay County.</p>
+    
+    <a href="{{ url_for('packages') }}" class="buy-link">Buy Internet Packages!</a>
+
+    <section class="packages">
+        <h3>Our Internet Packages</h3>
+        <ul>
+            <li><a href="#">Package 1: Fast & Affordable</a></li>
+            <li><a href="#">Package 2: Super Saver</a></li>
+            <li><a href="#">Package 3: Ultra Speed</a></li>
+        </ul>
+    </section>
+
+    <aside class="forum-slide">
+        <h4>Community Forum</h4>
+        <p>Stay updated with the latest news, job opportunities, and local events.</p>
+        <a href="{{ url_for('forum') }}">Visit the Forum</a>
+    </aside>
+</div>
+{% endblock %}
+
