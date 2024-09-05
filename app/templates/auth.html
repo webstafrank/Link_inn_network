@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Inn Internets - Authentication</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Link Inn Network</h1>
+        <p>Connecting Homes, Enriching Lives</p>
+    </header>
+    <section id="auth">
+        <h2>Login or Sign Up</h2>
+        <form id="login-form">
+            <label for="phone-number">Phone Number:</label>
+            <input type="tel" id="phone-number" name="phone-number"><br><br>
+            <label for="verification-code">Verification Code:</label>
+            <input type="text" id="verification-code" name="verification-code"><br><br>
+            <input type="submit" value="Login">
+        </form>
+        <p>Don't have an account? <a href="#" id="signup-link">Sign up here</a></p>
+        <form id="signup-form" style="display: none;">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="phone-number">Phone Number:</label>
+            <input type="tel" id="phone-number" name="phone-number"><br><br>
+            <label for="verification-code">Verification Code:</label>
+            <input type="text" id="verification-code" name="verification-code"><br><br>
+            <input type="submit" value="Sign up">
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2024 Link Inn Internets</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
