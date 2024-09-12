@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    {% if post.image %}
+        <img src="{{ url_for('static', filename='uploads/' ~ post.image) }}" alt="{{ post.title }}">
+    {% endif %}
+    
+    <!-- Like Post -->
+    <form action="{{ url_for('like_post', post_id=post.id) }}" method="POST">
+        <button type="submit">Like</button>
+    </form>
+    <p>{{ post.likes }} likes</p>
+
+    <!-- Comment Section -->
+    <h3>Comments</h3>
+    <div class="comments">
+        {% for comment in comments %}
+            <p>{{ comment.content }}</p>
+        {% endfor %}
+    </div>
+
+    <h4>Add a Comment:</h4>
+    <form method="POST">
+        <textarea name="comment" rows="3" cols="50"></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
+
