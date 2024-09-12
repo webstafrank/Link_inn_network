@@ -1,26 +1,36 @@
-# app/routes/payment_routes.py
-import stripe
-from flask import Blueprint, jsonify, request
-from app.models import Transaction, db
+import requests
+from flask import request, jsonify
 
-stripe.api_key = 'your_stripe_secret_key'
+QUIKK_API_KEY = 'your_quikk_api_key'
+QUIKK_API_SECRET = 'your_quikk_api_secret'
+QUIKK_BASE_URL = 'https://api.quikk.dev/mpesa/v1'
 
-payment = Blueprint('payment', __name__)
-
-@payment.route('/api/payment', methods=['POST'])
+@app.route('/process_payment', methods=['POST'])
 def process_payment():
-    data = request.get_json()
-    try:
-        charge = stripe.Charge.create(
-            amount=int(data['amount'] * 100),  # Amount in cents
-            currency='usd',
-            description='Internet Package Purchase',
-            source=data['token']
-        )
-        transaction = Transaction(user_id=data['user_id'], package_id=data['package_id'], amount=data['amount'], status='Completed')
-        db.session.add(transaction)
-        db.session.commit()
-        return jsonify({"message": "Payment successful."})
-    except stripe.error.StripeError as e:
-        return jsonify({"error": str(e)})
+    package_id = request.form.get('package_id')
+    phone_number = request.form.get('phone_number')
+
+    # Fetch package details from DB
+    package = Package.query.get(package_id)
+    
+    url = f'{QUIKK_BASE_URL}/stkpush'
+    payload = {
+        "phone": phone_number,
+        "amount": package.price,
+        "reference": "LinkInnInternets",
+        "description": f"Payment for {package.name}",
+        "callback_url": "https://yourdomain.com/callback"
+    }
+
+    headers = {
+        "Authorization": f"Bearer {QUIKK_API_KEY}:{QUIKK_API_SECRET}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+    
+    if response.status_code == 200:
+        return jsonify({"status": "success", "message": "Payment request sent."})
+    else:
+        return jsonify({"status": "error", "message": "Payment request failed."})
 
