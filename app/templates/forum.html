@@ -1,7 +1,34 @@
-{% for post in posts %}
-    <div class="post">
-        <h3>{{ post.title }}</h3>
-        <p>{{ post.content[:100] }}... <a href="{{ url_for('post_detail', post_id=post.id) }}">Read More</a></p>
+{% extends "base.html" %}
+{% block content %}
+    <h1>Community Forum</h1>
+    
+    <!-- Form to Create a New Post -->
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('forum') }}">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}
+        </div>
+        <div>
+            {{ form.content.label }}<br>
+            {{ form.content(rows=4, cols=50) }}
+        </div>
+        <div>
+            {{ form.image.label }}<br>
+            {{ form.image() }}
+        </div>
+        <button type="submit">Create Post</button>
+    </form>
+
+    <h2>Recent Posts</h2>
+    <!-- Sneak Peeks of Existing Posts -->
+    <div class="posts">
+        {% for post in posts %}
+            <div class="post">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.content[:100] }}... <a href="{{ url_for('post_detail', post_id=post.id) }}">Read More</a></p>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+{% endblock %}
 
