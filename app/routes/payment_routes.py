@@ -1,36 +1,64 @@
 import requests
-from flask import request, jsonify
-
-QUIKK_API_KEY = 'your_quikk_api_key'
-QUIKK_API_SECRET = 'your_quikk_api_secret'
-QUIKK_BASE_URL = 'https://api.quikk.dev/mpesa/v1'
+from flask import render_template, request, redirect, flash, url_for
+from app import app, db
+from app.models import Package, Transaction
+import os
 
 @app.route('/process_payment', methods=['POST'])
 def process_payment():
-    package_id = request.form.get('package_id')
-    phone_number = request.form.get('phone_number')
-
-    # Fetch package details from DB
-    package = Package.query.get(package_id)
+    package_id = request.form['package_id']
+    phone_number = request.form['phone_number']
     
-    url = f'{QUIKK_BASE_URL}/stkpush'
+    package = Package.query.get(package_id)
+    if not package:
+        flash('Package not found!', 'danger')
+        return redirect(url_for('index'))
+
+    # Quikk.dev Payment API call
+    quikk_url = 'https://api.quikk.dev/v1/payment'
+    
     payload = {
-        "phone": phone_number,
+        "phone_number": phone_number,
         "amount": package.price,
-        "reference": "LinkInnInternets",
-        "description": f"Payment for {package.name}",
-        "callback_url": "https://yourdomain.com/callback"
+        "description": f"Purchase of {package.name} package",
+        "callback_url": url_for('payment_callback', _external=True)
     }
 
     headers = {
-        "Authorization": f"Bearer {QUIKK_API_KEY}:{QUIKK_API_SECRET}",
-        "Content-Type": "application/json"
+        'Authorization': f'Bearer {app.config["QUIKK_API_KEY"]}',
+        'Content-Type': 'application/json'
     }
 
-    response = requests.post(url, json=payload, headers=headers)
-    
+    response = requests.post(quikk_url, json=payload, headers=headers)
+
     if response.status_code == 200:
-        return jsonify({"status": "success", "message": "Payment request sent."})
+        # Store transaction in database
+        transaction = Transaction(
+            package_id=package.id,
+            phone_number=phone_number,
+            status='pending'
+        )
+        db.session.add(transaction)
+        db.session.commit()
+
+        flash('Payment initiated, please complete the payment on your phone.', 'success')
+        return redirect(url_for('index'))
     else:
-        return jsonify({"status": "error", "message": "Payment request failed."})
+        flash('Payment failed. Please try again.', 'danger')
+        return redirect(url_for('index'))
+
+@app.route('/payment/callback', methods=['POST'])
+def payment_callback():
+    # Quikk.dev sends a callback on successful or failed payments
+    data = request.json
+    
+    transaction_id = data.get('transaction_id')
+    status = data.get('status')
+
+    transaction = Transaction.query.filter_by(id=transaction_id).first()
+    if transaction:
+        transaction.status = status
+        db.session.commit()
+
+    return '', 200
 
