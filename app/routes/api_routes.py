@@ -1,8 +1,9 @@
-from flask import render_template
+from flask import jsonify, request
 from app.models.package import Package
 
-@app.route('/')
-def index():
+@app.route('/api/packages', methods=['GET'])
+def get_packages():
     packages = Package.query.all()
-    return render_template('index.html', packages=packages)
+    packages_data = [{"id": p.id, "name": p.name, "price": p.price} for p in packages]
+    return jsonify(packages_data)
 
