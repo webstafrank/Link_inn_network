@@ -1,0 +1,10 @@
+// Add these relations to your existing User model
+model User {
+  // ... existing fields
+
+  // New relations
+  activities          UserActivity[]
+  preferences         UserPreference?
+  recommendationHistory RecommendationHistory[]
+}
+
