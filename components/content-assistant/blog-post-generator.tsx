@@ -243,4 +243,3 @@ export default function BlogPostGenerator() {
     </div>
   )
 }
-

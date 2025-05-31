@@ -1,7 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next/types"
-import { Mona_Sans as FontSans } from "next/font/google"
-import localFont from "next/font/local"
+import { Mona_Sans as FontSans, Content as FontHeading } from "next/font/google"
 
 import "./globals.css"
 import { cn } from "@/lib/utils"
@@ -14,9 +13,10 @@ const fontSans = FontSans({
   variable: "--font-sans",
 })
 
-const fontHeading = localFont({
-  src: "../assets/fonts/CalSans-SemiBold.woff2",
+const fontHeading = FontHeading({
+  subsets: ["latin"],
   variable: "--font-heading",
+  weight: ["600", "700", "800"],
 })
 
 export const metadata: Metadata = {
@@ -44,4 +44,3 @@ export default function RootLayout({
     </html>
   )
 }
-

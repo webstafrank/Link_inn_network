@@ -118,4 +118,3 @@ export default function MediaUpload({ onUploadComplete, type = "IMAGE", postId, 
     </div>
   )
 }
-

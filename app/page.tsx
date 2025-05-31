@@ -5,18 +5,8 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/auth"
-import { getRecommendations } from "@/lib/services/recommendation-engine"
-import RecommendationsSection from "@/components/recommendations/recommendations-section"
 
-export default async function HomePage() {
-  // Get user session
-  const session = await getServerSession(authOptions)
-
-  // Get recommendations if user is logged in
-  const recommendations = session?.user?.id ? await getRecommendations(session.user.id, 6) : null
-
+export default function HomePage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -56,19 +46,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Recommendations Section (for logged in users) */}
-      {session?.user && (
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <RecommendationsSection
-              initialData={recommendations || undefined}
-              title="FORGED FOR YOU"
-              description="Content tailored to your masculine journey"
-            />
-          </div>
-        </section>
-      )}
 
       {/* Featured Content Tabs */}
       <section className="w-full py-12 md:py-24 lg:py-32">
@@ -326,4 +303,3 @@ export default async function HomePage() {
     </div>
   )
 }
-

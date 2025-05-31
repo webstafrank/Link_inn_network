@@ -581,4 +581,3 @@ model Notification {
   @@index([isRead])
   @@index([createdAt])
 }
-

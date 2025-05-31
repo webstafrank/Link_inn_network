@@ -222,4 +222,3 @@ export async function generateSocialMedia(params: {
     throw new Error("Failed to generate social media content")
   }
 }
-

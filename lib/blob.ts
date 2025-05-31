@@ -23,4 +23,3 @@ export async function deleteFile(filename: string) {
     throw new Error("Failed to delete file")
   }
 }
-

@@ -28,4 +28,3 @@ export const Icons = {
     </svg>
   ),
 }
-

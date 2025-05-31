@@ -31,4 +31,3 @@ export default function ContentDisplay({ content, isLoading, placeholder }: Cont
     </Card>
   )
 }
-
